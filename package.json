@@ -1,0 +1,14 @@
+{
+  "name": "ai-spell-checker-chrome-ext",
+  "version": "1.0.0",
+  "description": "Chrome Extension for Spell Checking with ChatGPT",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sabee",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chrome": "^0.0.283"
+  }
+}
