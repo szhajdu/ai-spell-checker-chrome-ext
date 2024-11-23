@@ -57,15 +57,15 @@ jobs:
       - name: Upload Chrome Extension Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: chrome-extension-v${{ env.VERSION }}
-          path: dist/chrome-extension-v${{ env.VERSION }}.zip
+          name: chrome-extension
+          path: dist/chrome-extension-v$VERSION.zip
           if-no-files-found: warn
           compression-level: 6
           overwrite: false
           include-hidden-files: false
 
     outputs:
-      VERSION: ${{ steps.get_version.outputs.VERSION }}
+      VERSION: ${{ env.VERSION }}
 
   release:
     needs: build
@@ -78,13 +78,13 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: chrome-extension-v${{ needs.build.outputs.VERSION }}
+          name: chrome-extension
 
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
-          files: dist/chrome-extension-v${{ needs.build.outputs.VERSION }}.zip
+          files: chrome-extension-v${{ needs.build.outputs.VERSION }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
