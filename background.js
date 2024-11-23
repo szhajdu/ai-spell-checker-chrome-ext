@@ -58,20 +58,32 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                 .then(data => {
                     const correctedText = data.choices[0].message.content;
 
-                    // Show the corrected text in a notification
-                    chrome.notifications.create({
-                        type: 'basic',
-                        iconUrl: 'icon.png',
-                        title: 'Spelling Suggestions',
-                        message: correctedText
-                    });
-
                     // Send corrected text to content script.
                     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                        chrome.tabs.sendMessage(tabs[0].id, {
-                            action: 'writeClipboard',
-                            text: correctedText
-                        });
+                        if (chrome.runtime.lastError) {
+                            console.error('Error querying active tab:', chrome.runtime.lastError);
+                            return;
+                        }
+
+                        if (tabs && tabs.length > 0) {
+                            chrome.tabs.sendMessage(tabs[0].id, {
+                                action: 'replaceText',
+                                text: correctedText
+                            }, (response) => {
+                                if (chrome.runtime.lastError) {
+                                    console.error('Error sending message to content script:', chrome.runtime.lastError);
+                                    return;
+                                }
+
+                                if (response && response.success) {
+                                    console.log('Text successfully replaced.');
+                                } else {
+                                    console.warn('Failed to replace text in content script.', response ? response.error : 'No response received.');
+                                }
+                            });
+                        } else {
+                            console.error('No active tab found to send the corrected text to.');
+                        }
                     });
                 })
                 .catch(error => {
