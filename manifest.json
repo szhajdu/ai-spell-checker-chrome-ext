@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AI Spell Checker",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "Highlight text and get spelling suggestions via AI.",
   "permissions": ["contextMenus", "storage", "notifications", "clipboardWrite"],
   "host_permissions": ["https://api.openai.com/*"],

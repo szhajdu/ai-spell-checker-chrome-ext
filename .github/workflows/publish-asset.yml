@@ -1,0 +1,83 @@
+name: Build and Publish Chrome Extension as an Asset
+
+on:
+  push:
+    tags:
+      - 'v*'  # Runs only when a tag starting with 'v' is pushed, e.g., v1.0.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+        continue-on-error: true
+
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+          fi
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
+      - name: Check manifest.json version
+        id: check_version
+        run: |
+          MANIFEST_VERSION=$(jq -r '.version' manifest.json)
+          if [ "$MANIFEST_VERSION" != "$VERSION" ]; then
+            echo "Version mismatch: tag version ($VERSION) does not match manifest.json version ($MANIFEST_VERSION)"
+            exit 1
+          fi
+
+      - name: Create zip file of the extension
+        run: |
+          mkdir -p dist
+          zip -r dist/chrome-extension-v$VERSION.zip * -x "*.git*" -x "node_modules/**" -x ".github/**"
+
+      - name: Upload Chrome Extension Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension-v$VERSION
+          path: dist/chrome-extension-v$VERSION.zip
+
+    outputs:
+      VERSION: ${{ steps.get_version.outputs.VERSION }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chrome-extension-v${{ needs.build.outputs.VERSION }}
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          files: dist/chrome-extension-v${{ needs.build.outputs.VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
