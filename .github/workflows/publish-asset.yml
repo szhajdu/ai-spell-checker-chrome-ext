@@ -51,11 +51,18 @@ jobs:
           mkdir -p dist
           zip -r dist/chrome-extension-v$VERSION.zip * -x "*.git*" -x "node_modules/**" -x ".github/**"
 
+      - name: List files in dist directory
+        run: ls -la dist
+
       - name: Upload Chrome Extension Artifact
         uses: actions/upload-artifact@v4
         with:
           name: chrome-extension-v$VERSION
           path: dist/chrome-extension-v$VERSION.zip
+          if-no-files-found: warn
+          compression-level: 6
+          overwrite: false
+          include-hidden-files: false
 
     outputs:
       VERSION: ${{ steps.get_version.outputs.VERSION }}
