@@ -57,8 +57,8 @@ jobs:
       - name: Upload Chrome Extension Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: chrome-extension-v$VERSION
-          path: dist/chrome-extension-v$VERSION.zip
+          name: chrome-extension-v${{ env.VERSION }}
+          path: dist/chrome-extension-v${{ env.VERSION }}.zip
           if-no-files-found: warn
           compression-level: 6
           overwrite: false
