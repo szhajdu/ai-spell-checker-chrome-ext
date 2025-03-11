@@ -1,14 +1,25 @@
 {
-  "name": "ai-spell-checker-chrome-ext",
-  "version": "1.0.0",
-  "description": "Chrome Extension for Spell Checking with ChatGPT",
-  "main": "background.js",
+  "name": "ai-spell-checker",
+  "version": "1.1.0",
+  "description": "Spell checker using AI providers",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack",
+    "dev": "webpack --watch --mode=development",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint --fix src/**/*.js",
+    "zip": "node scripts/create-zip.js"
   },
-  "author": "sabee",
-  "license": "ISC",
   "devDependencies": {
-    "@types/chrome": "^0.0.283"
+    "@types/chrome": "^0.0.309",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^13.0.0",
+    "css-loader": "^7.1.2",
+    "eslint": "^9.22.0",
+    "eslint-plugin-import": "^2.31.0",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^6.0.1"
   }
 }

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spell Checker Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="card">
+        <h1>
+            Spell Checker Settings
+            <button id="toggleDarkMode" class="toggle-btn" title="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </h1>
+
+        <form id="settingsForm">
+            <div class="form-group">
+                <label for="apiKey">API Key</label>
+                <div class="password-field">
+                    <input type="password" id="apiKey" placeholder="Enter your API key" required>
+                    <button type="button" id="togglePassword" title="Show/Hide Password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="providerType">AI Provider</label>
+                <select id="providerType" required>
+                    <!-- Will be populated with available providers -->
+                </select>
+            </div>
+
+            <div id="providerOptions" class="provider-options">
+                <!-- Provider-specific options will be dynamically inserted here -->
+            </div>
+
+            <button type="submit">Save Settings</button>
+        </form>
+
+        <div id="status"></div>
+    </div>
+</body>
+</html>

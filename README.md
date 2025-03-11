@@ -15,9 +15,21 @@ This Chrome Extension allows you to check and correct the spelling of highlighte
     ```sh
     git clone https://github.com/szhajdu/ai-spell-checker-chrome-ext.git
     ```
-2. Open Chrome and navigate to `chrome://extensions/`.
-3. Enable "Developer mode" by toggling the switch in the top right corner.
-4. Click on "Load unpacked" and select the cloned repository folder.
+2. Install dependencies:
+   ```sh
+   npm install
+   # or
+   yarn install
+   ```
+3. Build the extension:
+   ```sh
+    npm run build
+    # or
+    yarn build
+    ```
+4. Open Chrome and navigate to `chrome://extensions/`.
+5. Enable "Developer mode" by toggling the switch in the top right corner.
+6. Click on "Load unpacked" and select the `dist` folder from the project
 
 ## Usage
 
