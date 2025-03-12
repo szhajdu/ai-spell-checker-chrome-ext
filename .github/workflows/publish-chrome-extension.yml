@@ -46,18 +46,18 @@ jobs:
 
       - name: Create extension package
         run: |
-          mkdir -p dist
           # Create a directory with the same name as the zip will have
           PACKAGE_DIR="ai-spell-checker-v$VERSION"
           mkdir -p "$PACKAGE_DIR"
-          
-          # Copy required files to this directory
-          cp -r manifest.json icons/ dist/ _locales/ "$PACKAGE_DIR/"
-          
-          # Create zip from the directory (not the files directly)
+
+          # Copy all built files from the dist directory
+          # This assumes yarn build creates all necessary files in dist/
+          cp -r dist/* "$PACKAGE_DIR/"
+
+          # Create zip from the directory
           zip -r "dist/$PACKAGE_DIR.zip" "$PACKAGE_DIR" \
             -x "**/.git/**" -x "**/node_modules/**" -x "**/.github/**"
-          
+
           # Clean up the temporary directory
           rm -rf "$PACKAGE_DIR"
 
