@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.version.outputs.VERSION }}
 
     steps:
       - name: Checkout repository
@@ -31,11 +33,11 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Validate manifest version
+      - name: Validate package.json version
         run: |
-          MANIFEST_VERSION=$(jq -r '.version' manifest.json)
-          if [[ "${{ steps.version.outputs.VERSION }}" != "$MANIFEST_VERSION" ]]; then
-            echo "::error::Version mismatch: tag (${{ steps.version.outputs.VERSION }}) != manifest ($MANIFEST_VERSION)"
+          PACKAGE_VERSION=$(jq -r '.version' package.json)
+          if [[ "${{ steps.version.outputs.VERSION }}" != "$PACKAGE_VERSION" ]]; then
+            echo "::error::Version mismatch: tag (${{ steps.version.outputs.VERSION }}) != package.json ($PACKAGE_VERSION)"
             exit 1
           fi
 
