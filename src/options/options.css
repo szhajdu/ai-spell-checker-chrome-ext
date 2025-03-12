@@ -1,125 +1,162 @@
+:root {
+    --bg-color: #f5f7fa;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --primary-color: #4285f4;
+    --secondary-color: #f8f9fa;
+    --border-color: #e0e0e0;
+    --input-bg: #ffffff;
+    --input-border: #cccccc;
+    --transition-speed: 0.3s;
+    --border-radius: 8px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     padding: 20px;
-    max-width: 600px;
+    max-width: 650px;
     margin: 0 auto;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.dark-mode {
-    background-color: #222;
-    color: #eee;
-}
-
-.dark-mode .card {
-    background-color: #333;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.dark-mode input, .dark-mode select {
-    background-color: #444;
-    color: #eee;
-    border-color: #555;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all var(--transition-speed) ease;
 }
 
 .card {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    transition: all var(--transition-speed) ease;
 }
 
 h1 {
     margin-top: 0;
+    font-weight: 600;
+    font-size: 24px;
+    color: var(--text-color);
+    margin-bottom: 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.toggle-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-}
-
-.form-group {
-    margin-bottom: 15px;
+/* Form elements */
+.form-group, .option-group {
+    margin-bottom: 22px;
 }
 
 label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-color);
 }
 
-input, select {
+input, select, textarea {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 12px;
+    border: 1px solid var(--input-border);
+    border-radius: var(--border-radius);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 14px;
+    transition: all 0.2s;
     box-sizing: border-box;
 }
 
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+}
+
 .password-field {
+    display: flex;
+    align-items: center;
+    width: 100%;
     position: relative;
+}
+
+.password-field input {
+    flex: 1;
+    padding-right: 40px;
 }
 
 #togglePassword {
     position: absolute;
     right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
     background: none;
     border: none;
+    color: #777;
+    cursor: pointer;
+    padding: 5px;
 }
 
 button {
-    background-color: #4285f4;
+    background-color: var(--primary-color);
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
+    padding: 12px 20px;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
 }
 
 button:hover {
-    background-color: #3367d6;
+    opacity: 0.9;
+    transform: translateY(-1px);
 }
 
-#status {
+/* Status message */
+.status {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: var(--border-radius);
+    font-size: 14px;
     display: none;
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 4px;
-    background-color: #d4edda;
-    color: #155724;
+    animation: fadeIn 0.3s;
 }
 
-.dark-mode #status {
-    background-color: #32383e;
-    color: #86cfda;
+.status.success {
+    background-color: rgba(76, 217, 100, 0.15);
+    color: #2a9134;
 }
 
-.provider-options {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid #ddd;
+.status.error {
+    background-color: rgba(255, 59, 48, 0.15);
+    color: #cf1124;
 }
 
-.dark-mode .provider-options {
-    border-top-color: #555;
+/* Theme customization */
+.section-title {
+    font-size: 18px;
+    margin: 30px 0 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.full-width {
-    width: 100%;
-    box-sizing: border-box;
+#themeSwitcher {
+    margin-bottom: 15px;
+}
+
+.description {
+    color: #777;
+    font-size: 13px;
+    margin-top: 5px;
 }
 
 textarea.full-width {
     min-height: 100px;
-    padding: 8px;
     resize: vertical;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }

@@ -2,34 +2,111 @@ import { ProviderFactory } from '../provider/provider-factory.js';
 import './options.css';
 
 // Toggle Password Visibility
-const togglePassword = document.getElementById('togglePassword');
-const apiKeyInput = document.getElementById('apiKey');
-togglePassword.addEventListener('click', () => {
+document.getElementById('togglePassword').addEventListener('click', () => {
+    const apiKeyInput = document.getElementById('apiKey');
     const type = apiKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
     apiKeyInput.setAttribute('type', type);
-    togglePassword.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    document.getElementById('togglePassword').innerHTML =
+        type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
 });
 
-// Dark Mode Toggle
-const toggleDarkMode = document.getElementById('toggleDarkMode');
-toggleDarkMode.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    toggleDarkMode.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+// Theme handling
+const themeSwitcher = document.getElementById('themeSwitcher');
+const colorPickers = document.querySelectorAll('.color-picker');
+const root = document.documentElement;
 
-    // Save dark mode preference
-    chrome.storage.sync.set({ darkMode: isDarkMode });
-});
+// Set up theme switcher
+function setupThemeSwitcher() {
+    const themes = {
+        'light': {
+            '--bg-color': '#f5f7fa',
+            '--card-bg': '#ffffff',
+            '--text-color': '#333333',
+            '--primary-color': '#4285f4',
+            '--secondary-color': '#f8f9fa',
+            '--border-color': '#e0e0e0',
+            '--input-bg': '#ffffff',
+            '--input-border': '#cccccc'
+        },
+        'dark': {
+            '--bg-color': '#1e1e2e',
+            '--card-bg': '#2d2d3f',
+            '--text-color': '#e4e4e4',
+            '--primary-color': '#7289da',
+            '--secondary-color': '#3b3b4f',
+            '--border-color': '#444456',
+            '--input-bg': '#3b3b4f',
+            '--input-border': '#555566'
+        },
+        'blue': {
+            '--bg-color': '#e6f0ff',
+            '--card-bg': '#ffffff',
+            '--text-color': '#2c3e50',
+            '--primary-color': '#1a73e8',
+            '--secondary-color': '#dce9f9',
+            '--border-color': '#b8daff',
+            '--input-bg': '#ffffff',
+            '--input-border': '#90caf9'
+        },
+        'dark-purple': {
+            '--bg-color': '#292639',
+            '--card-bg': '#352f44',
+            '--text-color': '#e9e9e9',
+            '--primary-color': '#8a6af0',
+            '--secondary-color': '#3c3553',
+            '--border-color': '#4c4465',
+            '--input-bg': '#3c3553',
+            '--input-border': '#5d5175'
+        }
+    };
+
+    // Populate theme switcher
+    Object.keys(themes).forEach(theme => {
+        const option = document.createElement('option');
+        option.value = theme;
+        option.textContent = theme.split('-').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+        themeSwitcher.appendChild(option);
+    });
+
+    // Handle theme change
+    themeSwitcher.addEventListener('change', () => {
+        const selectedTheme = themeSwitcher.value;
+
+        applyTheme(themes[selectedTheme]);
+
+        chrome.storage.sync.set({ theme: selectedTheme });
+    });
+
+    // Load saved theme
+    chrome.storage.sync.get(['theme'], (data) => {
+        if (data.theme) {
+            themeSwitcher.value = data.theme;
+
+            applyTheme(themes[data.theme]);
+        } else {
+            // Default theme
+            themeSwitcher.value = 'light';
+            applyTheme(themes.light);
+        }
+    });
+}
+
+// Apply theme colors
+function applyTheme(themeColors) {
+    Object.entries(themeColors).forEach(([property, value]) => {
+        root.style.setProperty(property, value);
+    });
+}
 
 // Update provider options UI based on selected provider
 function updateProviderOptions(providerType, savedOptions = {}) {
     const optionsContainer = document.getElementById('providerOptions');
     optionsContainer.innerHTML = '';
 
-    // Add provider-specific options based on the selected provider
     switch (providerType) {
         case 'openai':
-            // Add OpenAI-specific options
             const modelGroup = document.createElement('div');
             modelGroup.className = 'form-group';
 
@@ -52,7 +129,6 @@ function updateProviderOptions(providerType, savedOptions = {}) {
                 modelSelect.appendChild(option);
             });
 
-            // Set default model if not saved previously
             if (!savedOptions.model) {
                 modelSelect.value = 'gpt-3.5-turbo';
             }
@@ -61,8 +137,6 @@ function updateProviderOptions(providerType, savedOptions = {}) {
             modelGroup.appendChild(modelSelect);
             optionsContainer.appendChild(modelGroup);
             break;
-
-        // Add cases for other providers as they're implemented
 
         default:
             const message = document.createElement('p');
@@ -89,7 +163,6 @@ document.getElementById('settingsForm').addEventListener('submit', (event) => {
                 providerOptions.model = model;
             }
             break;
-        // Add cases for other providers as they're implemented
     }
 
     chrome.storage.sync.set({
@@ -98,17 +171,26 @@ document.getElementById('settingsForm').addEventListener('submit', (event) => {
         providerOptions: providerOptions,
         promptTemplate: promptTemplate
     }, () => {
-        const statusElement = document.getElementById('status');
-        statusElement.style.display = 'block';
-        statusElement.textContent = 'Settings saved successfully!';
-        setTimeout(() => {
-            statusElement.style.display = 'none';
-        }, 3000);
+        showStatus('Settings saved successfully!', 'success');
     });
 });
 
+function showStatus(message, type = 'success') {
+    const statusElement = document.getElementById('status');
+    statusElement.textContent = message;
+    statusElement.className = `status ${type}`;
+    statusElement.style.display = 'block';
+
+    setTimeout(() => {
+        statusElement.style.display = 'none';
+    }, 3000);
+}
+
 // Load saved settings on page load
 document.addEventListener('DOMContentLoaded', () => {
+    // Set up theme system
+    setupThemeSwitcher();
+
     // Populate provider dropdown
     const providerSelect = document.getElementById('providerType');
     ProviderFactory.getAvailableProviders().forEach(provider => {
@@ -120,41 +202,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load settings from storage
     chrome.storage.sync.get(
-        ['apiKey', 'providerType', 'providerOptions', 'darkMode', 'promptTemplate'],
+        ['apiKey', 'providerType', 'providerOptions', 'promptTemplate'],
         (data) => {
-            // Set API key
             if (data.apiKey) {
                 document.getElementById('apiKey').value = data.apiKey;
             }
 
-            // Set provider type
             if (data.providerType) {
                 document.getElementById('providerType').value = data.providerType;
             } else {
-                document.getElementById('providerType').value = 'openai'; // Default
+                document.getElementById('providerType').value = 'openai';
             }
 
-            // Set prompt template
             document.getElementById('promptTemplate').value = data.promptTemplate || 'Correct spelling: {text}';
 
-            // Update provider options UI
             updateProviderOptions(
                 data.providerType || 'openai',
                 data.providerOptions || {}
             );
-
-            // Apply dark mode if saved
-            if (data.darkMode) {
-                document.body.classList.add('dark-mode');
-                toggleDarkMode.innerHTML = '<i class="fas fa-sun"></i>';
-            }
         });
 
     // Update provider options when provider changes
     document.getElementById('providerType').addEventListener('change', function () {
         chrome.storage.sync.get('providerOptions', (data) => {
-            const savedOptions = data.providerOptions || {};
-            updateProviderOptions(this.value, savedOptions);
+            updateProviderOptions(this.value, data.providerOptions || {});
         });
     });
 });

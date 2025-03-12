@@ -8,13 +8,15 @@
 </head>
 <body>
     <div class="card">
-        <h1>
-            Spell Checker Settings
-            <button id="toggleDarkMode" class="toggle-btn" title="Toggle Dark Mode">
-                <i class="fas fa-moon"></i>
-            </button>
-        </h1>
+        <h1>Spell Checker Settings</h1>
 
+        <div class="section-title">Theme</div>
+        <div class="form-group">
+            <label for="themeSwitcher">Choose Theme</label>
+            <select id="themeSwitcher"></select>
+        </div>
+
+        <div class="section-title">API Configuration</div>
         <form id="settingsForm">
             <div class="form-group">
                 <label for="apiKey">API Key</label>
@@ -28,28 +30,25 @@
 
             <div class="form-group">
                 <label for="providerType">AI Provider</label>
-                <select id="providerType" required>
-                    <!-- Will be populated with available providers -->
-                </select>
+                <select id="providerType" required></select>
             </div>
 
-            <div id="providerOptions" class="provider-options">
-                <!-- Provider-specific options will be dynamically inserted here -->
-            </div>
+            <div id="providerOptions" class="provider-options"></div>
 
+            <div class="section-title">Prompt Configuration</div>
             <div class="option-group">
-              <label for="promptTemplate">Prompt Template</label>
-              <textarea id="promptTemplate" class="full-width" placeholder="Use {text} as placeholder for the text to check"></textarea>
-              <p class="description">
-                Use {text} as a placeholder for the text to be processed.
-                Default: "Correct spelling: {text}"
-              </p>
+                <label for="promptTemplate">Prompt Template</label>
+                <textarea id="promptTemplate" class="full-width" placeholder="Use {text} as placeholder for the text to check"></textarea>
+                <p class="description">
+                    Use {text} as a placeholder for the text to be processed.
+                    Default: "Correct spelling: {text}"
+                </p>
             </div>
 
             <button type="submit">Save Settings</button>
         </form>
 
-        <div id="status"></div>
+        <div id="status" class="status"></div>
     </div>
 </body>
 </html>
