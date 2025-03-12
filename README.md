@@ -11,6 +11,17 @@ This Chrome Extension allows you to check and correct the spelling of highlighte
 
 ## Installation
 
+### Option 1: Install from GitHub Releases (Recommended)
+
+1. Go to the [Releases](https://github.com/szhajdu/ai-spell-checker-chrome-ext/releases) page of this repository
+2. Download the latest release zip file.
+3. Extract the downloaded zip file to a location on your computer.
+4. Open Chrome and navigate to `chrome://extensions/`.
+5. Enable "Developer mode" by toggling the switch in the top right corner.
+6. Click on "Load unpacked" and select the extracted folder.
+
+### Option 2: Build from Source
+
 1. Clone the repository:
     ```sh
     git clone https://github.com/szhajdu/ai-spell-checker-chrome-ext.git
