@@ -77,6 +77,7 @@ document.getElementById('settingsForm').addEventListener('submit', (event) => {
 
     const apiKey = document.getElementById('apiKey').value;
     const providerType = document.getElementById('providerType').value;
+    const promptTemplate = document.getElementById('promptTemplate').value || 'Correct spelling: {text}';
 
     // Collect provider-specific options
     const providerOptions = {};
@@ -94,7 +95,8 @@ document.getElementById('settingsForm').addEventListener('submit', (event) => {
     chrome.storage.sync.set({
         apiKey: apiKey,
         providerType: providerType,
-        providerOptions: providerOptions
+        providerOptions: providerOptions,
+        promptTemplate: promptTemplate
     }, () => {
         const statusElement = document.getElementById('status');
         statusElement.style.display = 'block';
@@ -117,34 +119,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Load settings from storage
-    chrome.storage.sync.get(['apiKey', 'providerType', 'providerOptions', 'darkMode'], (data) => {
-        // Set API key
-        if (data.apiKey) {
-            document.getElementById('apiKey').value = data.apiKey;
-        }
+    chrome.storage.sync.get(
+        ['apiKey', 'providerType', 'providerOptions', 'darkMode', 'promptTemplate'],
+        (data) => {
+            // Set API key
+            if (data.apiKey) {
+                document.getElementById('apiKey').value = data.apiKey;
+            }
 
-        // Set provider type
-        if (data.providerType) {
-            document.getElementById('providerType').value = data.providerType;
-        } else {
-            document.getElementById('providerType').value = 'openai'; // Default
-        }
+            // Set provider type
+            if (data.providerType) {
+                document.getElementById('providerType').value = data.providerType;
+            } else {
+                document.getElementById('providerType').value = 'openai'; // Default
+            }
 
-        // Update provider options UI
-        updateProviderOptions(
-            data.providerType || 'openai',
-            data.providerOptions || {}
-        );
+            // Set prompt template
+            document.getElementById('promptTemplate').value = data.promptTemplate || 'Correct spelling: {text}';
 
-        // Apply dark mode if saved
-        if (data.darkMode) {
-            document.body.classList.add('dark-mode');
-            toggleDarkMode.innerHTML = '<i class="fas fa-sun"></i>';
-        }
-    });
+            // Update provider options UI
+            updateProviderOptions(
+                data.providerType || 'openai',
+                data.providerOptions || {}
+            );
+
+            // Apply dark mode if saved
+            if (data.darkMode) {
+                document.body.classList.add('dark-mode');
+                toggleDarkMode.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        });
 
     // Update provider options when provider changes
-    document.getElementById('providerType').addEventListener('change', function() {
+    document.getElementById('providerType').addEventListener('change', function () {
         chrome.storage.sync.get('providerOptions', (data) => {
             const savedOptions = data.providerOptions || {};
             updateProviderOptions(this.value, savedOptions);

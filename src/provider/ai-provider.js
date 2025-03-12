@@ -11,4 +11,8 @@ export class AIProvider {
     getName() {
         return 'Base Provider';
     }
+
+    formatPrompt(text, promptTemplate) {
+        return promptTemplate.replace('{text}', text);
+    }
 }

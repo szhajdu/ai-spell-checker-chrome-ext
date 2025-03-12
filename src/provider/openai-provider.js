@@ -12,6 +12,8 @@ export class OpenAIProvider extends AIProvider {
 
     async processText(text, options = {}) {
         const model = options.model || 'gpt-3.5-turbo';
+        const promptTemplate = options.promptTemplate || 'Correct spelling: {text}';
+        const formattedPrompt = this.formatPrompt(text, promptTemplate);
 
         const response = await fetch(this.baseUrl, {
             method: 'POST',
@@ -21,7 +23,7 @@ export class OpenAIProvider extends AIProvider {
             },
             body: JSON.stringify({
                 model: model,
-                messages: [{ role: 'user', content: `Correct spelling: ${text}` }]
+                messages: [{ role: 'user', content: formattedPrompt }]
             })
         });
 
