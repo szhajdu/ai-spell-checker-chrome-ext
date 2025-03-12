@@ -86,7 +86,7 @@ function handleError(error) {
 function showNotification(title, message) {
     chrome.notifications.create({
         type: 'basic',
-        iconUrl: 'icon.png',
+        iconUrl: chrome.runtime.getURL('assets/icons/icon.png'),
         title: title,
         message: message
     });
