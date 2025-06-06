@@ -8,6 +8,7 @@ This Chrome Extension allows you to check and correct the spelling of highlighte
 - **AI-Powered Spell Checking**: Utilizes OpenAI's GPT-3.5-turbo model to correct spelling.
 - **Clipboard Integration**: Copies the corrected text to the clipboard.
 - **Text Replacement**: Replaces the highlighted text on the webpage with the corrected version.
+- **Customizable Prompt Template**: Configure a prompt template using `{text}` as a placeholder for the selected text.
 
 ## Installation
 
@@ -53,3 +54,4 @@ This Chrome Extension allows you to check and correct the spelling of highlighte
 
 1. Open the extension settings by navigating to the options page.
 2. Enter your OpenAI API key in the provided field.
+3. (Optional) Set a custom prompt template. Use `{text}` to indicate where the selected text should be inserted.
