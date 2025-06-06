@@ -40,7 +40,7 @@ This Chrome Extension allows you to check and correct the spelling of highlighte
     ```
 4. Open Chrome and navigate to `chrome://extensions/`.
 5. Enable "Developer mode" by toggling the switch in the top right corner.
-6. Click on "Load unpacked" and select the `dist` folder from the project
+6. Click on "Load unpacked" and select the `dist` folder from the project.
 
 ## Usage
 
