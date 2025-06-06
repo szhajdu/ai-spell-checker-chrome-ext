@@ -20,8 +20,10 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 async function handleSpellCheck(selectedText, tab) {
     try {
         // Get settings from storage
-        const settings = await chrome.storage.sync.get(['apiKey', 'providerType', 'providerOptions']);
-        const { apiKey, providerType = 'openai', providerOptions = {} } = settings;
+        const settings = await chrome.storage.sync
+            .get(['apiKey', 'providerType', 'providerOptions', 'promptTemplate']);
+        const { apiKey, providerType = 'openai', providerOptions = {},
+            promptTemplate } = settings;
 
         if (!apiKey) {
             showNotification('API Key Missing', 'Please set your API key in the extension settings.');
@@ -29,8 +31,12 @@ async function handleSpellCheck(selectedText, tab) {
             return;
         }
 
-        const provider = await ProviderFactory.getProvider(providerType, apiKey, providerOptions);
-        const correctedText = await provider.processText(selectedText);
+        const provider = await ProviderFactory
+            .getProvider(providerType, apiKey, providerOptions);
+        const correctedText = await provider.processText(selectedText, {
+            ...providerOptions,
+            ...(promptTemplate ? { promptTemplate } : {})
+        });
 
         // Send corrected text to content script
         sendTextToContentScript(tab, correctedText);
